@@ -1,0 +1,25 @@
+{
+  "name": "eco-sort-ai",
+  "version": "1.0.0",
+  "description": "Deep Learning-Based Classification of Recyclable Waste Materials for Smart Waste Management",
+  "main": "backend/app.py",
+  "scripts": {
+    "install-frontend": "cd frontend && npm install",
+    "dev-frontend": "cd frontend && npm run dev",
+    "dev-backend": "set PYTHONPATH=.&& python backend/app.py",
+    "verify-backend": "set PYTHONPATH=.&& python backend/verify.py",
+    "train-model": "set PYTHONPATH=.&& python backend/model/train.py"
+  },
+  "keywords": [
+    "deep-learning",
+    "waste-classification",
+    "pytorch",
+    "mobilenetv2",
+    "grad-cam",
+    "flask",
+    "react",
+    "sustainability"
+  ],
+  "author": "Antigravity AI Engineer",
+  "license": "MIT"
+}
