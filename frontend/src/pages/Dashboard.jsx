@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', '');
   const COLORS = ['#2e7d32', '#388e3c', '#4caf50', '#81c784', '#a5d6a7', '#c8e6c9', '#e8f5e9', '#66bb6a', '#43a047', '#1b5e20'];
 
   const fetchStats = async () => {
@@ -214,7 +215,7 @@ const Dashboard = () => {
                   <td className="py-3 px-4 font-bold text-slate-700 dark:text-slate-300">#{row.id}</td>
                   <td className="py-3 px-4">
                     <div className="w-8 h-8 rounded-lg overflow-hidden border border-glass-dark dark:border-glass-light">
-                      <img src={`http://localhost:5000${row.original_image_path}`} alt="" className="w-full h-full object-cover" />
+                      <img src={`${BASE_URL}${row.original_image_path}`} alt="" className="w-full h-full object-cover" />
                     </div>
                   </td>
                   <td className="py-3 px-4 font-semibold text-slate-800 dark:text-white">{row.predicted_class}</td>

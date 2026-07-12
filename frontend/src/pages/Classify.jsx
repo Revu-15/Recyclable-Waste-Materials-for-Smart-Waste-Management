@@ -18,6 +18,7 @@ const Classify = () => {
   const streamRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', '');
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -259,7 +260,7 @@ const Classify = () => {
                 <GlassCard className="p-4 flex flex-col gap-2">
                   <p className="text-[10px] font-bold text-slate-500 uppercase">Original Waste Image</p>
                   <div className="rounded-xl overflow-hidden aspect-square border border-glass-dark dark:border-glass-light">
-                    <img src={`http://localhost:5000${result.image_url}`} alt="Original" className="w-full h-full object-cover" />
+                    <img src={`${BASE_URL}${result.image_url}`} alt="Original" className="w-full h-full object-cover" />
                   </div>
                 </GlassCard>
                 <GlassCard className="p-4 flex flex-col gap-2">
@@ -269,7 +270,7 @@ const Classify = () => {
                   </p>
                   <div className="rounded-xl overflow-hidden aspect-square border border-glass-dark dark:border-glass-light bg-slate-900">
                     {result.heatmap_url ? (
-                      <img src={`http://localhost:5000${result.heatmap_url}`} alt="Grad-CAM" className="w-full h-full object-cover" />
+                      <img src={`${BASE_URL}${result.heatmap_url}`} alt="Grad-CAM" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs text-slate-500">Grad-CAM unavailable</div>
                     )}

@@ -13,6 +13,7 @@ const History = () => {
   const [error, setError] = useState(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', '');
 
   const fetchHistory = async () => {
     try {
@@ -123,7 +124,7 @@ const History = () => {
                   <td className="py-3 px-4 font-bold text-slate-700 dark:text-slate-300">#{row.id}</td>
                   <td className="py-3 px-4">
                     <div className="w-10 h-10 rounded-lg overflow-hidden border border-glass-dark dark:border-glass-light">
-                      <img src={`http://localhost:5000${row.original_image_path}`} alt="" className="w-full h-full object-cover" />
+                      <img src={`${BASE_URL}${row.original_image_path}`} alt="" className="w-full h-full object-cover" />
                     </div>
                   </td>
                   <td className="py-3 px-4 font-semibold text-slate-800 dark:text-white">
