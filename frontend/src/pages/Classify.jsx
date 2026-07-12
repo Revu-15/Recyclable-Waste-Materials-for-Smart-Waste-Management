@@ -118,9 +118,7 @@ const Classify = () => {
     formData.append('image', image);
 
     try {
-      const response = await axios.post(`${API_URL}/classify`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await axios.post(`${API_URL}/classify`, formData);
       clearInterval(stepInterval);
       if (response.data.success) {
         setResult(response.data);
