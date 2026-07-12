@@ -8,7 +8,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/health');
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const response = await axios.get(`${API_URL}/health`);
         if (response.data.status === 'healthy') {
           setSystemOnline(true);
         } else {

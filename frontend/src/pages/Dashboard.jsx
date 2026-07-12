@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   const COLORS = ['#2e7d32', '#388e3c', '#4caf50', '#81c784', '#a5d6a7', '#c8e6c9', '#e8f5e9', '#66bb6a', '#43a047', '#1b5e20'];
 
   const fetchStats = async () => {
