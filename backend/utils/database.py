@@ -47,11 +47,11 @@ def init_db():
     cursor.execute('SELECT COUNT(*) FROM predictions')
     if cursor.fetchone()[0] == 0:
         dummy_data = [
-            ('plastic_bottle.jpg', '/uploads/plastic_bottle.jpg', '/uploads/heatmap_plastic_bottle.jpg', 'Plastic', 98.45, 0.24, '2026-07-11 10:15:30', 'This item is recyclable. Please clean the bottle before placing it in the plastic recycling bin.', 'Recycling one plastic bottle saves energy and reduces landfill waste.'),
-            ('newspaper.jpg', '/uploads/newspaper.jpg', '/uploads/heatmap_newspaper.jpg', 'Paper', 94.20, 0.18, '2026-07-11 11:22:15', 'This item is recyclable. Keep it dry and discard it in the paper recycling bin.', 'Recycling paper saves trees, water, and energy compared to producing new paper.'),
-            ('apple_core.jpg', '/uploads/apple_core.jpg', None, 'Organic Waste', 99.12, 0.32, '2026-07-11 12:45:00', 'Organic waste is biodegradable. Place it in the compost bin.', 'Composting organic waste reduces methane emissions from landfills.'),
-            ('cardboard_box.jpg', '/uploads/cardboard_box.jpg', '/uploads/heatmap_cardboard_box.jpg', 'Cardboard', 97.60, 0.21, '2026-07-11 14:05:12', 'Recyclable. Flatten the box and place it in the cardboard recycling bin.', 'Recycling 1 ton of cardboard saves 9 cubic yards of landfill space.'),
-            ('wine_bottle.jpg', '/uploads/wine_bottle.jpg', '/uploads/heatmap_wine_bottle.jpg', 'Glass', 96.15, 0.28, '2026-07-11 15:30:22', 'Glass is 100% recyclable. Rinse it and put it in the glass container.', 'Glass can be recycled endlessly without losing quality or purity.')
+            ('plastic_bottle.jpg', '/static/uploads/plastic_bottle.jpg', '/static/uploads/heatmap_plastic_bottle.jpg', 'Plastic', 98.45, 0.24, '2026-07-11 10:15:30', 'This item is recyclable. Please clean the bottle before placing it in the plastic recycling bin.', 'Recycling one plastic bottle saves energy and reduces landfill waste.'),
+            ('newspaper.jpg', '/static/uploads/newspaper.jpg', '/static/uploads/heatmap_newspaper.jpg', 'Paper', 94.20, 0.18, '2026-07-11 11:22:15', 'This item is recyclable. Keep it dry and discard it in the paper recycling bin.', 'Recycling paper saves trees, water, and energy compared to producing new paper.'),
+            ('apple_core.jpg', '/static/uploads/apple_core.jpg', None, 'Organic Waste', 99.12, 0.32, '2026-07-11 12:45:00', 'Organic waste is biodegradable. Place it in the compost bin.', 'Composting organic waste reduces methane emissions from landfills.'),
+            ('cardboard_box.jpg', '/static/uploads/cardboard_box.jpg', '/static/uploads/heatmap_cardboard_box.jpg', 'Cardboard', 97.60, 0.21, '2026-07-11 14:05:12', 'Recyclable. Flatten the box and place it in the cardboard recycling bin.', 'Recycling 1 ton of cardboard saves 9 cubic yards of landfill space.'),
+            ('wine_bottle.jpg', '/static/uploads/wine_bottle.jpg', '/static/uploads/heatmap_wine_bottle.jpg', 'Glass', 96.15, 0.28, '2026-07-11 15:30:22', 'Glass is 100% recyclable. Rinse it and put it in the glass container.', 'Glass can be recycled endlessly without losing quality or purity.')
         ]
         for item in dummy_data:
             cursor.execute('''
