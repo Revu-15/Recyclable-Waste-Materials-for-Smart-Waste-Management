@@ -1,5 +1,3 @@
-import cv2
-import numpy as np
 import os
 from PIL import Image
 
@@ -7,6 +5,8 @@ from PIL import Image
 IS_RENDER = os.environ.get('RENDER') is not None
 
 if not IS_RENDER:
+    import cv2
+    import numpy as np
     import torch
     import torchvision.transforms as transforms
 
@@ -70,8 +70,11 @@ else:
 
 def apply_heatmap_overlay(original_image_path, heatmap_raw, output_path):
     """
-    Overlays the raw heatmap onto the original image using OpenCV and saves the result.
+    Overlays the raw heatmap onto the original image using OpenCV and saves the result (used locally).
     """
+    import cv2
+    import numpy as np
+    
     img = cv2.imread(original_image_path)
     if img is None:
         raise ValueError(f"Failed to read image at {original_image_path}")
@@ -88,7 +91,6 @@ def apply_heatmap_overlay(original_image_path, heatmap_raw, output_path):
     heatmap_color = cv2.applyColorMap(heatmap_255, cv2.COLORMAP_JET)
     
     # Overlay heatmap onto original image (blend with alpha-transparency)
-    # 60% original image + 40% heatmap color
     overlay = cv2.addWeighted(img, 0.6, heatmap_color, 0.4, 0)
     
     # Ensure target directory exists
@@ -104,40 +106,58 @@ def generate_and_save_gradcam(wrapper, image_path, output_path, target_class_nam
     Primary interface for Grad-CAM generation in Flask.
     """
     if IS_RENDER:
-        # Generate simulated center-focused Gaussian heatmap overlay using OpenCV
-        img = cv2.imread(image_path)
-        if img is None:
-            raise ValueError(f"Failed to read image at {image_path}")
+        # Generate simulated center-focused Gaussian heatmap overlay using PIL (No OpenCV/libGL dependencies)
+        from PIL import ImageDraw, ImageFilter
+        try:
+            img = Image.open(image_path).convert('RGB')
+            width, height = img.size
             
-        height, width, _ = img.shape
-        
-        # Create a blank single-channel heatmap of the same size
-        heatmap_raw = np.zeros((height, width), dtype=np.float32)
-        
-        # Generate a Gaussian kernel centered on the image
-        # Standard deviation relative to image size (adjust focus area)
-        sigma_x = width / 4.0
-        sigma_y = height / 4.0
-        
-        x = np.arange(0, width, 1, np.float32)
-        y = np.arange(0, height, 1, np.float32)
-        x, y = np.meshgrid(x, y)
-        
-        x0 = width / 2.0
-        y0 = height / 2.0
-        
-        # Center-focused 2D Gaussian function
-        gaussian = np.exp(-((x - x0)**2 / (2 * sigma_x**2) + (y - y0)**2 / (2 * sigma_y**2)))
-        
-        # Normalize between 0 and 1
-        heatmap_raw = gaussian / np.max(gaussian)
-        
-        # Apply the blending overlay
-        apply_heatmap_overlay(image_path, heatmap_raw, output_path)
-        
+            # Create a heatmap base with cold color (dark blue/purple)
+            heatmap = Image.new('RGB', (width, height), color=(10, 10, 120))
+            draw = ImageDraw.Draw(heatmap)
+            
+            # Draw a hot zone (red ellipse) in the center
+            r = min(width, height) // 3
+            draw.ellipse([
+                width // 2 - r,
+                height // 2 - r,
+                width // 2 + r,
+                height // 2 + r
+            ], fill=(240, 50, 50))
+            
+            # Draw a medium zone (yellow ellipse) slightly smaller
+            r2 = min(width, height) // 4
+            draw.ellipse([
+                width // 2 - r2,
+                height // 2 - r2,
+                width // 2 + r2,
+                height // 2 + r2
+            ], fill=(250, 200, 20))
+            
+            # Apply strong Gaussian blur to create a smooth Grad-CAM-like gradient
+            blur_radius = min(width, height) // 8
+            if blur_radius < 5:
+                blur_radius = 5
+            heatmap_blurred = heatmap.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+            
+            # Blend the original image with the blurred heatmap (60% original, 40% heatmap)
+            blended = Image.blend(img, heatmap_blurred, alpha=0.45)
+            
+            # Ensure target directory exists
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            blended.save(output_path, 'JPEG')
+            print(f"PIL-based simulated Grad-CAM heatmap saved to {output_path}")
+        except Exception as e:
+            print(f"Error generating PIL heatmap: {e}")
+            # Fallback: copy original image to output_path if something fails
+            import shutil
+            shutil.copy(image_path, output_path)
+            
         return target_class_name
 
-    # Local PyTorch Grad-CAM execution
+    # Local PyTorch Grad-CAM execution (OpenCV-based overlay)
+    import torch
+    
     image = Image.open(image_path).convert('RGB')
     input_tensor = wrapper.transform(image).unsqueeze(0).to(wrapper.device)
     
